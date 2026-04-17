@@ -2,6 +2,11 @@
 
 Protocolo helper de IP completamente \textbf{informativo}, es decir, no toma decisiones sino que permite reportar errores o consultar información. Tampoco agrega confiabilidad, sino que \textbf{brinda feedback}. Se encapsula en IP, pero no es un protocolo de transporte.
 
+
+Cuando un dispositivo descarta un datagrama IP, genera un mensaje ICMP que incluye el encabezado (header) del datagrama original que produjo el problema y al menos los primeros 8 bytes del campo de datos de dicho datagrama.
+
+Los mensajes ICMP son los siguientes.
+
 \subsection{Mensajes de Error (Error-reporting messages)}
 Estos mensajes reportan errores que un dispositivo puede encontrar cuando procesa un paquete IP.
 
@@ -27,3 +32,6 @@ Estos mensajes ocurren usualmente de a pares (una solicitud y su correspondiente
     \item \textbf{Echo Request / Echo Reply (Tipos 8 y 0):} Son los mensajes utilizados por la clásica utilidad de diagnóstico \texttt{ping} para comprobar la conectividad bidireccional entre nodos.
     \item \textbf{Timestamp Request / Timestamp Reply (Tipos 13 y 14):} Utilizados para determinar el tiempo de tránsito a través de la red o para sincronizar relojes de los dispositivos.
 \end{itemize}
+
+
+Cuando un mensaje ICMP es descartado, \textbf{no se genera otro} para avisar que se descartó (evito bucles). Solo avisamos el descarte de un fragmento si es el \textbf{primero}, y tampoco avisamos si se descarta un mensaje con destino multicast.
