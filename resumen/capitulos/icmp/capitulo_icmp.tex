@@ -1,0 +1,29 @@
+\section{Internet Control Message Protocol (ICMP)}
+
+Protocolo helper de IP completamente \textbf{informativo}, es decir, no toma decisiones sino que permite reportar errores o consultar información. Tampoco agrega confiabilidad, sino que \textbf{brinda feedback}. Se encapsula en IP, pero no es un protocolo de transporte.
+
+\subsection{Mensajes de Error (Error-reporting messages)}
+Estos mensajes reportan errores que un dispositivo puede encontrar cuando procesa un paquete IP.
+
+\begin{itemize}[label=\textcolor{acento}{$\bullet$}]
+    \item \textbf{Destination Unreachable (Tipo 3):} Indica que el paquete no pudo llegar a su destino.
+    \begin{itemize}[label=\textcolor{acento!60}{$\bullet$}]
+        \item \textit{Code 0:} Net Unreachable (Red inalcanzable).
+        \item \textit{Code 1:} Host Unreachable (Host inalcanzable).
+        \item \textit{Code 3:} Port Unreachable (Puerto inalcanzable, muy común al fallar una conexión UDP).
+    \end{itemize}
+    
+    \item \textbf{Time Exceeded (Tipo 11):} Se genera cuando expira un temporizador relacionado al datagrama.
+    \begin{itemize}[label=\textcolor{acento!60}{$\bullet$}]
+        \item \textit{Code 0:} In Transit. Se venció el campo TTL (Time to Live) durante el tránsito por los routers.
+        \item \textit{Code 1:} Reassembly Timeout. Se descartó un datagrama fragmentado porque se agotó el tiempo de espera antes de que llegaran todos sus fragmentos para el reensamblado.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Mensajes de Consulta (Query messages)}
+Estos mensajes ocurren usualmente de a pares (una solicitud y su correspondiente respuesta) y permiten obtener información específica del estado de un dispositivo en la red.
+
+\begin{itemize}[label=\textcolor{acento}{$\bullet$}]
+    \item \textbf{Echo Request / Echo Reply (Tipos 8 y 0):} Son los mensajes utilizados por la clásica utilidad de diagnóstico \texttt{ping} para comprobar la conectividad bidireccional entre nodos.
+    \item \textbf{Timestamp Request / Timestamp Reply (Tipos 13 y 14):} Utilizados para determinar el tiempo de tránsito a través de la red o para sincronizar relojes de los dispositivos.
+\end{itemize}

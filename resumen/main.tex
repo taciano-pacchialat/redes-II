@@ -19,6 +19,10 @@
 \usepackage{booktabs}
 \usepackage{pagecolor}
 \usepackage{caption}
+\usepackage{array}
+\usepackage{ragged2e}
+\usepackage{setspace}
+
 
 % --- DEFINICIÓN DE COLORES ---
 \definecolor{fondo}{HTML}{E5CCAB} % Color crema solicitado
@@ -32,12 +36,14 @@
 
 % --- ESTILO DE SECCIONES ---
 \titleformat{\section}
-  {\color{acento}\normalfont\Large\bfseries}
-  {\thesection}{1em}{}[{\titlerule[0.8pt]}]
+{\color{acento}\normalfont\Large\bfseries}
+{\thesection}{1em}{}[{\titlerule[0.8pt]}]
 
 \titleformat{\subsection}
-  {\color{primario}\normalfont\large\bfseries}
-  {\thesubsection}{1em}{}
+{\color{primario}\normalfont\large\bfseries}
+{\thesubsection}{1em}{}
+
+\setstretch{1.4}
 
 % --- CONFIGURACIÓN DE CAJAS (tcolorbox) ---
 % Se corrige el error de "sharp corners=false" eliminando la opción conflictiva
@@ -68,6 +74,7 @@
 \setlist[itemize]{leftmargin=4em}
 \captionsetup[figure]{font=it, labelfont=it}
 
+
 % --- DATOS DEL DOCUMENTO ---
 \title{
     \vspace{-1.5cm}
@@ -92,7 +99,11 @@
 \tableofcontents
 \newpage
 
-\input{capitulos/capitulo-1/01-capa-de-enlace}
+\input{capitulos/ip/capitulo_ip.tex}
+
+\newpage
+
+\input{capitulos/icmp/capitulo_icmp.tex}
 
 \newpage
 
