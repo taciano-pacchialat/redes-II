@@ -1,0 +1,37 @@
+\section{ICMPv6 con NDP}
+
+El ICMPv6 es una parte fundamental del stack IPv6. Se utiliza como protocolo de control, información y reporte de errores. Además, a diferencia de ICMP, incorpora el \textbf{Neighbor Discovery Protocol (NDP)}, reemplazo de ARP.
+
+
+NDP es la funcionalidad más importante de ICMPv6. Su objetivo es mapear direcciones lógicas IPv6 a direcciones físicas. Al igual que ARP, trabaja dinámicamente con auto-aprendizaje sin la necesidad de una configuración previa. 
+
+A diferencia de ARP en IPv4, que utilizaba mensajes de \textit{broadcast} (generando interrupciones a todos los nodos de la red), NDP opera sobre \textbf{ICMPv6} y utiliza direcciones de \textbf{multicast} específicas, lo que lo hace mucho más eficiente.
+
+\subsection{Funciones Principales}
+NDP proporciona varios servicios críticos para el funcionamiento de una red local IPv6:
+\begin{itemize}[label=\textcolor{acento}{$\bullet$}]
+    \item \textbf{Resolución de Direcciones (Address Resolution):} Sustituye a ARP, mapeando una dirección IPv6 conocida a una dirección física (MAC).
+    \item \textbf{Descubrimiento de Routers (Router Discovery):} Permite a los hosts encontrar routers conectados en su mismo enlace local.
+    \item \textbf{Autoconfiguración (SLAAC):} Permite a los hosts aprender los prefijos de red para generar automáticamente sus propias direcciones IPv6.
+    \item \textbf{Detección de Direcciones Duplicadas (DAD):} Mecanismo para asegurar que una dirección IPv6 no esté siendo usada por otro nodo en la misma red antes de asignársela.
+\end{itemize}
+
+\subsection{Paquetes de NDP (Mensajes ICMPv6)}
+NDP utiliza 5 tipos de mensajes ICMPv6 para llevar a cabo sus tareas. Se dividen principalmente en dos grupos: los relacionados con routers y los relacionados con vecinos (hosts).
+
+\subsubsection{Mensajes entre Router y Host}
+\begin{itemize}[label=\textcolor{acento!60}{$\bullet$}]
+    \item \textbf{Router Solicitation (RS - Tipo 133):} Un host envía este mensaje (usualmente en multicast) cuando se conecta a la red para pedir a cualquier router presente que se anuncie inmediatamente, sin esperar al anuncio periódico.
+    \item \textbf{Router Advertisement (RA - Tipo 134):} Los routers envían este mensaje de forma periódica o en respuesta a un RS. Contiene información vital para los hosts, como prefijos de red (para SLAAC), dirección del router por defecto, valor del MTU y límites de saltos.
+\end{itemize}
+
+\subsubsection{Mensajes entre Vecinos (Resolución ARP en IPv6)}
+\begin{itemize}[label=\textcolor{acento!120}{$\bullet$}]
+    \item \textbf{Neighbor Solicitation (NS - Tipo 135):} Es el equivalente al \textit{ARP Request} de IPv4. Un nodo lo envía para consultar la dirección MAC (Link-Layer Address) de una dirección IPv6 objetivo. También se usa para el proceso DAD (verificar si una IP ya existe).
+    \item \textbf{Neighbor Advertisement (NA - Tipo 136):} Es el equivalente al \textit{ARP Reply}. Un nodo responde con este mensaje indicando su dirección MAC tras recibir un NS.
+\end{itemize}
+
+\subsubsection{Redirección}
+\begin{itemize}[label=\textcolor{acento!90}{$\bullet$}]
+    \item \textbf{Redirect (Tipo 137):} Un router utiliza este mensaje para informarle a un host que existe un camino (o un router de primer salto) mucho mejor para alcanzar un destino específico.
+\end{itemize}
