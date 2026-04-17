@@ -1,0 +1,28 @@
+\section{Capa de Red}
+
+La \textbf{capa de enlace} (capa 2) se encarga de proveer conectividad entre nodos adyacentes o vecinos, siendo responsable de transmitir una trama sobre un enlace en particular. Los mensajes entre origen y destino pueden transitar por distintas capas de enlace. La \textbf{Capa de Red} se encuentra por encima de la capa de enlace.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{capitulos/capitulo-1/imagenes/capas.png}
+    \caption{Modelo TCP/IP}
+    \label{fig:capas-de-modelo-tcp}
+\end{figure}
+
+\subsection{Diseño y servicios}
+
+La capa de red fué diseñada para que cumpla con los siguientes requerimientos: 
+
+\noindent
+\begin{enumerate}
+    \item Independiente de la tecnología de subred.
+    \item Aislada de la cantidad, tipo y topologías de las \textbf{subredes}.
+    \item Direccionamiento uniforme.
+\end{enumerate}
+
+Como servicios, debe poder transportar mensajes desde un nodo emisor a receptor (inclusive si son redes distintas) y determinar el camino que seguirá un mensaje entre dos nodos.
+
+
+
+
+
