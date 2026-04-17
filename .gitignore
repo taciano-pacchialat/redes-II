@@ -1,0 +1,42 @@
+# LaTeX build directory
+build/
+
+# Common LaTeX intermediate files
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.bcf
+*.run.xml
+*.blg
+*.bbl
+*.idx
+*.ilg
+*.ind
+*.acn
+*.acr
+*.alg
+*.glg
+*.glo
+*.gls
+*.ist
+*.synctex.gz
+*.nav
+*.snm
+*.vrb
+*.xdv
+
+# Editor and OS junk
+*~
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# VS Code: ignore everything except project settings
+.vscode/*
+!.vscode/settings.json
