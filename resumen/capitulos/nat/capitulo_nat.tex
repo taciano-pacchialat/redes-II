@@ -1,0 +1,35 @@
+\section{Network Address Translation}
+
+Utilizado para \textbf{traducir direcciones} desde un espacio privado a un espacio público. NAT es importante debido a que permite que un mismo conjunto de direcciones sea utilizado en distintas partes de internet como redes privadas. Los bloques de direcciones privadas son:
+
+\begin{itemize}[label=\textcolor{acento}{$\bullet$}]
+    \item \texttt{10.0.0.0/8}
+    \item \texttt{172.16.0.0/12}
+    \item \texttt{192.168.0.0/16}
+\end{itemize}
+
+Hay routers encargados de hacer la translación, generalmente los routers de borde. Estos mantienen tablas de translación, y todo el tráfico de una sesión tiene que pasar por el mismo router NAT. 
+
+\subsection{NAT Básico}
+
+El NAT básico solo reescribe y reemplaza direcciones IP, es decir, se mapea una IP privada a una pública. Si lo hacemos estáticamente, requerimos una dirección pública por dirección privada. Si es dinámico, necesitamos de un timer para cada entrada.
+
+\subsection{Network Address Port Translation (NAPT)}    
+
+Debido a que NAT no es recomendado para un pool pequeño de direcciones, tenemos la opción de usar NAPT. NAPT es \textbf{One-to-Many:} utiliza los puertos de los protocolos de capa superior (TCP/UDP) para resolver el mapping. 
+
+A diferencia de NAT, ahora mantenemos en la tabla de traducción el protocolo, la dirección y el puerto origen y destino. El puerto origen siempre se intenta conservar, pero si ya está ocupado por otra traducción debemos reemplazarlo por otro que esté disponible.
+
+Tenemos dos alternativas. Una es utilizando un \textbf{pool de direcciones}, donde configuramos una determinada cantidad de direcciones y hacemos \emph{Port Address Translation} sobre estas direcciones del pool.
+
+La otra alternativa es utilizar \textbf{Overloading}, donde para salir a internet los dispositivos de una red pequeña comparten una única dirección pública, y cada uno va tomando puertos a medida que los necesita. 
+
+\subsection{Port Forwarding}
+
+Las técnicas que vimos anteriormente sólo permiten enviar tráfico de conexiones generadas internamente; no permiten el acceso desde afuera hacia adentro. 
+
+El \emph{Port Forwarding} permite acceder a servicios ubicados en una red privada desde afuera de la misma. Sólo se implmeneta con NAPT, haciendo un mapeo reverso estático de puertos. 
+
+\begin{definicion}{Resumen}
+    \textbf{NAT} solo reemplaza una IP por otra, mientras que \textbf{NAPT} mapea IPs a puertos. \textbf{Port Forwarding} se usa para acceder desde afuera hacia adentro de una red privada. 
+\end{definicion}
