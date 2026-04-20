@@ -1,0 +1,55 @@
+\section{QUIC}
+
+QUIC es un protocolo de capa de transporte que viene a solucionar problemas de TCP:
+
+\begin{itemize}[label=\textcolor{acento}{$\bullet$}]
+    \item \textbf{Head of Line Blocking:} la pérdida de un segmento bloquea el envío de los segmentos subsiguientes hasta que sea recuperado. 
+    \item \textbf{Retardo de Establecimiento de Conexión:} el 3WH tarda mucho. 
+    \item \textbf{Tamaño de Cabecera Fijo}. 
+    \item \textbf{Identificación de Conexiones:} con TCP se necesita una IP y puerto TCP para identificar una conexión. Si se cambia la IP, el identificador se pierde. 
+\end{itemize}
+
+\begin{definicion}{QUIC}
+    Protocolo de transporte \textbf{orientado a conexión}, diseñado para permitir intercambios rápidos con \textbf{0-RTT}. Está \textbf{encapsulado en UDP}, pero usa conexiones llamadas \textbf{streams}.
+\end{definicion}
+
+\subsection{Paquetes y Frames}
+
+Los extremos se comunican mediante \textbf{paquetes}, y a su vez cada paquete QUIC contiene \textbf{frames}. 
+
+Un datagrama UDP encapsula uno o más paquetes QUIC, un paquete QUIC encapsula uno o más frames de mismo stream o de \textbf{diferentes streams}. 
+
+Hay distintos tipos de paquetes:
+
+\begin{itemize}[label=\textcolor{acento}{$\bullet$}]
+    \item \textbf{Version Negotiation:} solo los envía un servidor cuando no conoce la versión de QUIC del cliente.
+    \item \textbf{Initial:} transporta el primer frame Crypto entre cliente y servidor, para ejecutar el cambio de claves.
+    \item \textbf{0-RTT:} envía datos de aplicación inmediatamente, antes del handshake. Requiere una conexión previa.
+    \item \textbf{Retry:} lo envía el servidor cuando queire validar la IP del cliente antes del intercambio de claves.
+    \item \textbf{1-RTT:} se usa después de la versión y las claves, contienen streams y acks.
+\end{itemize}
+
+\subsection{Streams}
+
+\begin{definicion}{Streams}
+    Representa un flujo de bytes dentro de una conexión QUIC, y se crean mediante el envío de datos. Pueden ser creados por cualquiera de los extremos, y la cantidad es arbitraria. Los identifica un Stream ID, que no puede ser reusado durante la conexión. 
+\end{definicion}
+
+Los límites de un frame tienen que estar dentro de los límites del \textbf{control de flujo} indicado por el otro extremo. 
+
+
+\begin{tcolorbox}[
+    enhanced,
+    colback=blue!3!white,         % Fondo celeste muy suave
+    colframe=blue!60!black,       % Borde azul oscuro elegante
+    title=\textbf{Ciclo de Vida y Estados de un Stream en QUIC},
+    fonttitle=\large\sffamily,    % Fuente del título sin serifas
+    coltitle=white,
+    boxrule=1.2pt,
+    arc=6pt,                      % Bordes redondeados
+    drop shadow=black!15!white,   % Sombra sutil
+    left=10pt, right=10pt, top=10pt, bottom=10pt
+]
+En el protocolo QUIC, los \textit{streams} operan como canales lógicos independientes que atraviesan un ciclo de vida estructurado para garantizar la multiplexación eficiente sin sufrir el problema de bloqueo de cabeza de línea (Head-of-Line Blocking). Todo flujo nace en un estado \textbf{Idle} (inactivo) hasta que uno de los extremos inicia la comunicación, pasando al estado \textbf{Open} (abierto), donde ocurre el intercambio de información (unidireccional o bidireccional). A medida que la transmisión de datos finaliza mediante la señalización de un flag \texttt{FIN}, o si la comunicación se interrumpe abruptamente con un \texttt{RESET}, el flujo transita por estados intermedios denominados \textbf{Half-Closed} (semi-cerrado local o remoto), lo que permite que un extremo termine de enviar datos mientras aún sigue recibiendo los del otro lado. Finalmente, cuando ambos sentidos de la comunicación han concluido, el flujo alcanza el estado \textbf{Closed} (cerrado), liberando sus recursos de forma completamente aislada sin afectar la estabilidad ni el rendimiento del resto de los flujos activos en la conexión.
+
+\end{tcolorbox}

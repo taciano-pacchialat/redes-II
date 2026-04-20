@@ -147,10 +147,14 @@ Se utiliza para que un extremo no envíe datos más rápido de lo que el otro ex
     \textbf{Retransmission TimeOut:} el tiempo que debe pasar para retransmitir un paquete. 
 \end{definicion}
 
-El \textbf{Maximum Segment Size} se comunica en el campo de \textbf{opciones}, al igual que el escalado de la ventana (\textbf{TCP Windows Scale}). El scale se envía al inicio de sesión, y se va modificando. 
+El \textbf{Maximum Segment Size} se comunica en el campo de \textbf{opciones}. 
 
 \subsubsection{Timers}
 
 El \textbf{Persist Timer} se utiliza cuando la ventana de recepción se reduce a cero. Una vez que se reduce la ventana, el emisor va enviando paquetes de \textbf{1 Byte} cada un intervalo de tiempo que va incrementando (\textbf{Back-Off}). Esto se hace hasta no recibir un \texttt{ACK} con \texttt{wind = 0}.
 
 El \textbf{Keepalive Timer} sirve para mantener una conexión abierta cuando no hay intercambio de datos. Se utiliza para interrogar al otro extremo por su estado, y funciona de forma muy similar al \emph{persist timer}.
+
+\begin{nota}{\emph{\textbf{Recordar...}} \smallbreak}
+    El \textbf{Control de Flujo TCP} se ocupa de evitar el buffer del receptor cuando el emisor es más rápido, y lo hace mediante una \textbf{Ventana de Recepción} dinámica (varía a lo largo de la conexión). El tamaño de la ventana se comunica mediante un campo en la \textbf{cabecera} llamado \textbf{Window Size}.
+\end{nota}
