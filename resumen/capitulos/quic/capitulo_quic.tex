@@ -53,3 +53,92 @@ Los límites de un frame tienen que estar dentro de los límites del \textbf{con
 En el protocolo QUIC, los \textit{streams} operan como canales lógicos independientes que atraviesan un ciclo de vida estructurado para garantizar la multiplexación eficiente sin sufrir el problema de bloqueo de cabeza de línea (Head-of-Line Blocking). Todo flujo nace en un estado \textbf{Idle} (inactivo) hasta que uno de los extremos inicia la comunicación, pasando al estado \textbf{Open} (abierto), donde ocurre el intercambio de información (unidireccional o bidireccional). A medida que la transmisión de datos finaliza mediante la señalización de un flag \texttt{FIN}, o si la comunicación se interrumpe abruptamente con un \texttt{RESET}, el flujo transita por estados intermedios denominados \textbf{Half-Closed} (semi-cerrado local o remoto), lo que permite que un extremo termine de enviar datos mientras aún sigue recibiendo los del otro lado. Finalmente, cuando ambos sentidos de la comunicación han concluido, el flujo alcanza el estado \textbf{Closed} (cerrado), liberando sus recursos de forma completamente aislada sin afectar la estabilidad ni el rendimiento del resto de los flujos activos en la conexión.
 
 \end{tcolorbox}
+
+Mediante los \emph{Streams} se logra \textbf{multiplexar} intercalando frames de múltiples streams dentro de uno o más paquetes QUIC.
+
+\subsection{Conexiones}
+
+\begin{definicion}{CID}
+    Cada conexión posee identificadores de conexión (CIDs), elegidos por cada extremo de forma \textbf{independiente} donde uno elige el CID del otro. Los paquetes de cabecera larga incluyen \emph{Destination CID} y \emph{Source CID}, mientras que los de cabecera corta incluyen solo el source.
+\end{definicion}
+
+
+\subsubsection{Handshake}
+
+Las conexiones son aseguradas con \textbf{Transport Layer Security 1.3 (TLS 1.3)}.
+
+\begin{enumerate}[label=\textcolor{acento}{\textbf{\arabic*.}}]
+    \item El cliente le envía un \emph{Client Hello} en un frame \emph{CRYPTO} mediante un paquete \emph{QUIC Initial}.
+    \item El servidor responde con un \textbf{Server Hello} y la información de seguridad (varios paquetes QUIC).
+    \item El cliente finaliza el handshake.
+\end{enumerate}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{capitulos/quic/imagenes/quic-handshake.png}
+    \caption{Handshake de QUIC}
+    \label{fig:quic-handshake}
+\end{figure}
+
+También se puede hacer \textbf{0-RTT Handshake}, que permite enviar datos reutilizando parámetros negociados en una conexión previa que recuerda el cliente.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{capitulos/quic/imagenes/0-rtt-handshake.png}
+    \caption{0-RTT Handshake de QUIC}
+    \label{fig:0-rtt-quic-handshake}
+\end{figure}
+
+En QUIC, cada paquete en un datagrama UDP debe ser reconocido individualmente por ACKs. Si se pierde un paquete no se retransmite, sino que se genera otro paquete con un nuevo número de paquete. 
+
+\subsubsection{Cierre de Conexiones}
+
+Las conexiones se pueden cerrar de tres formas distintas:
+
+\begin{itemize}[label=\textcolor{acento}{$\bullet$}]
+    \item \textbf{Tiempo de Inactividad:} el cliente y servidor anuncian su tiempo de inactividad, y se elige el menor. Si pasa este tiempo y ninguno envió datos, se cierra la conexión \textbf{silenciosamente}.
+    \item \textbf{Cierre Inmediato:} ocurre cuando un extremo envía un frame \emph{connection_close}. Todos los streams se cierran en el acto.
+    \item \textbf{Reset sin Estado:} se da cuando un extremo recibe paquetes que no puede asociar a una conexión activa.
+\end{itemize}
+
+\subsection{Control de Flujo}
+
+El receptor necesita limitar la cantidad de datos que puede recibir en su buffer.
+
+\begin{definicion}{Niveles de Control de Flujo QUIC}
+    \textbf{Nivel de Stream:} previene que un stream consuma el buffer completo de la conexión.
+
+    \textbf{Nivel de Conexión:} previene que un emisor exceda la capacidad del buffer del receptor.
+\end{definicion}
+
+Los \textbf{límites} para todos los streams se setean en el \emph{handshake}, y se pueden \textbf{incrementar} a lo largo del tiempo; si se intenta reducir el paquete es válido pero no tiene efecto alguno. 
+
+\begin{nota}
+    El receptor cierra una conexión con \texttt{flow_control_error} si el emisor viola los límites. En este caso se considera al emisor como \textbf{bloqueado}, y el mismo emisor debe enviar frames \texttt{DATA_BLOCKED} para indicar que tiene datos a enviar pero está bloqueado por límites de control de flujo. 
+\end{nota}
+
+Si el emisor envía datos hasta llegar al \textbf{límite} entonces no puede enviar más y se lo considera bloqueado.
+
+\subsection{Transport Layer Security (TLS) 1.3}
+
+Provee un canal seguro entre dos extremos mediante autenticación del servidor al cliente (opcionalmente al revés) además de brindar confidencialidad e integridad de los datos que se transmiten. 
+
+El TLS 1.3 se compone de dos factores:
+
+\begin{itemize}[label=\textcolor{acento}{$\bullet$}]
+    \item \textbf{Handshake Protocol:} autenticación, negociación de protocolo criptográfico e intercambio de claves.
+    \item \textbf{Record Protocol:} transferencia segura de datos utilizando claves establecidas en el handshake.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{capitulos/quic/imagenes/tls-handshake.png}
+    \caption{Handshake con TLS 1.3}
+    \label{fig:tls-handshake}
+\end{figure}
+
+Los mensajes TLS se transportan en frames \emph{crypto}. 
+
+\begin{nota}{\textbf{\emph{En resumen...}}\smallskip}
+    QUIC es un protocolo de transporte sobre UDP que permite encapsular varios paquetes dentro de un datagrama UDP, y a su vez varios frames dentro de un paquete QUIC. Tiene menos RTT sin dejar de lado la seguridad. Combina lo mejor de TCP con lo mejor de UDP.
+\end{nota}
