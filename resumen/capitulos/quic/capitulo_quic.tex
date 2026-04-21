@@ -97,7 +97,7 @@ Las conexiones se pueden cerrar de tres formas distintas:
 
 \begin{itemize}[label=\textcolor{acento}{$\bullet$}]
     \item \textbf{Tiempo de Inactividad:} el cliente y servidor anuncian su tiempo de inactividad, y se elige el menor. Si pasa este tiempo y ninguno envió datos, se cierra la conexión \textbf{silenciosamente}.
-    \item \textbf{Cierre Inmediato:} ocurre cuando un extremo envía un frame \emph{connection_close}. Todos los streams se cierran en el acto.
+    \item \textbf{Cierre Inmediato:} ocurre cuando un extremo envía un frame \emph{connection\_close}. Todos los streams se cierran en el acto.
     \item \textbf{Reset sin Estado:} se da cuando un extremo recibe paquetes que no puede asociar a una conexión activa.
 \end{itemize}
 
@@ -113,8 +113,8 @@ El receptor necesita limitar la cantidad de datos que puede recibir en su buffer
 
 Los \textbf{límites} para todos los streams se setean en el \emph{handshake}, y se pueden \textbf{incrementar} a lo largo del tiempo; si se intenta reducir el paquete es válido pero no tiene efecto alguno. 
 
-\begin{nota}
-    El receptor cierra una conexión con \texttt{flow_control_error} si el emisor viola los límites. En este caso se considera al emisor como \textbf{bloqueado}, y el mismo emisor debe enviar frames \texttt{DATA_BLOCKED} para indicar que tiene datos a enviar pero está bloqueado por límites de control de flujo. 
+\begin{nota}{}
+    El receptor cierra una conexión con \texttt{flow\_control\_error} si el emisor viola los límites. En este caso se considera al emisor como \textbf{bloqueado}, y el mismo emisor debe enviar frames \texttt{DATA\_BLOCKED} para indicar que tiene datos a enviar pero está bloqueado por límites de control de flujo. 
 \end{nota}
 
 Si el emisor envía datos hasta llegar al \textbf{límite} entonces no puede enviar más y se lo considera bloqueado.

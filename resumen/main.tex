@@ -42,8 +42,16 @@
 {\thesection}{1em}{}[{\titlerule[0.8pt]}]
 
 \titleformat{\subsection}
-{\color{primario}\normalfont\large\bfseries}
-{\thesubsection}{1em}{}
+{\color{acento}\normalfont\large\bfseries}
+{\thesubsection}{0.8em}{}[{\color{acento!80}\titlerule[0.5pt]}]
+
+\titleformat{\subsubsection}
+{\color{acento!90}\normalfont\normalsize\bfseries}
+{\thesubsubsection}{0.7em}{}
+
+\titlespacing*{\section}{0pt}{1.3em}{0.8em}
+\titlespacing*{\subsection}{0pt}{1.1em}{0.6em}
+\titlespacing*{\subsubsection}{0pt}{0.9em}{0.4em}
 
 \setstretch{1.4}
 
@@ -122,6 +130,30 @@
 \newpage
 
 \input{capitulos/icmpv6/capitulo_icmpv6.tex}
+
+\newpage
+
+\input{capitulos/nat/capitulo_nat.tex}
+
+\newpage
+
+\input{capitulos/udp/capitulo_udp.tex}
+
+\newpage
+
+\input{capitulos/tcp/capitulo_tcp.tex}
+
+\newpage
+
+\input{capitulos/quic/capitulo_quic.tex}
+
+\newpage
+
+\input{capitulos/dns/capitulo_dns.tex}
+
+\newpage
+
+\input{capitulos/ftp/capitulo_ftp.tex}
 
 \newpage
 
