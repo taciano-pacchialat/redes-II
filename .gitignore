@@ -1,6 +1,3 @@
-# LaTeX build directory
-build/
-
 # Common LaTeX intermediate files
 *.aux
 *.fdb_latexmk

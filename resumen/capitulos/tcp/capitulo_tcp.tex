@@ -158,3 +158,66 @@ El \textbf{Keepalive Timer} sirve para mantener una conexión abierta cuando no 
 \begin{nota}{\emph{\textbf{Recordar...}} \smallbreak}
     El \textbf{Control de Flujo TCP} se ocupa de evitar el buffer del receptor cuando el emisor es más rápido, y lo hace mediante una \textbf{Ventana de Recepción} dinámica (varía a lo largo de la conexión). El tamaño de la ventana se comunica mediante un campo en la \textbf{cabecera} llamado \textbf{Window Size}.
 \end{nota}
+
+\subsection{Control de Congestión}
+
+El control de congestión sirve para evitar degradar la calidad de la red.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{capitulos/tcp/imagenes/congestion-vs-flujo.png}
+    \caption{Control de congestión vs control de flujo}
+    \label{fig:flujo-vs-congestion}
+\end{figure}
+
+\subsubsection{Modelo end-to-end}
+
+Los extremos son la fuente de la demanda. Ellos deben estimar los \textbf{tiempos} y el \textbf{grado de congestión}, y en base a elo reducir la demanda. 
+
+Los nodos intermedios monitorean el estado de la red.
+
+Utiliza tres variables.
+
+\begin{enumerate}[label=\textcolor{acento}{\textbf{\arabic*.}}]
+    \item \textbf{cwnd:} ventana de congestión (congestion window).
+    \item \textbf{rcv\_win:} ventana del receptor, publicada en el segmetnto (receive window).
+    \item \textbf{ssthresh:} umbral de slow start que actualiza cwnd (slow start threshold).
+\end{enumerate}
+
+\begin{nota}
+    \begin{center}
+        ventana = min(rcv\_wnd, cwnd)
+    \end{center}
+\end{nota}
+
+La fase de \textbf{Slow Start} se encarga de inicializar el sistema y descubrir la congestión rápidamente, incrementando \texttt{cwnd} hasta alcanzar la congestión y estima su valor óptimo mediante pérdida de segmentos. 
+
+Luego de cada segmento validado, la \texttt{cwnd} se aumenta en una unidad. Cuando \texttt{cwnd >= ssthresh}, TCP detiene el crecimiento de \texttt{cwnd}.
+
+Cuando \texttt{cwnd > ssthresh}, por cada ACK \texttt{cwnd = cwnd + 1 / cwnd}, es decir, se incrementa aditivamente. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{capitulos/tcp/imagenes/ssthresh.png}
+    \caption{ssthresh y cwnd}
+    \label{fig:ssthresh-cwnd}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{capitulos/tcp/imagenes/congestion-grafico.png}
+    \caption{Gráfico completo}
+    \label{fig:congestion-grafico}
+\end{figure}
+
+La \textbf{detección de paquetes perdidos} se hace esperado el \texttt{RTO}, que usualmente es \texttt{2 * RTT}.
+
+\subsubsection{Fast Retransmit, Fast Recovery}
+
+Cuando se recibe un segmento fuera de orden se debe enviar un ACK, lo cual provoca \textbf{duplicación de ACKs}.
+
+\begin{definicion}{Fast Retransmit}
+    Al recibir el \textbf{tercer ACK repetido} se retrasmite sin esperar el RTO.
+\end{definicion}
+
+Luego de esa retransmisión, se pasa a \textbf{Fast Recovery}.
