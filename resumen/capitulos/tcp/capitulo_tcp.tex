@@ -192,9 +192,9 @@ Utiliza tres variables.
 
 La fase de \textbf{Slow Start} se encarga de inicializar el sistema y descubrir la congestión rápidamente, incrementando \texttt{cwnd} hasta alcanzar la congestión y estima su valor óptimo mediante pérdida de segmentos. 
 
-Luego de cada segmento validado, la \texttt{cwnd} se aumenta en una unidad. Cuando \texttt{cwnd >= ssthresh}, TCP detiene el crecimiento de \texttt{cwnd}.
+Luego de cada segmento validado, la \texttt{cwnd} se duplica. Cuando \texttt{cwnd >= ssthresh}, TCP detiene el crecimiento de \texttt{cwnd}.
 
-Cuando \texttt{cwnd > ssthresh}, por cada ACK \texttt{cwnd = cwnd + 1 / cwnd}, es decir, se incrementa aditivamente. 
+Cuando \texttt{cwnd > ssthresh}, por cada ACK \texttt{cwnd = cwnd + 1}, es decir, se incrementa de forma lineal. 
 
 \begin{figure}[H]
     \centering
@@ -220,4 +220,4 @@ Cuando se recibe un segmento fuera de orden se debe enviar un ACK, lo cual provo
     Al recibir el \textbf{tercer ACK repetido} se retrasmite sin esperar el RTO.
 \end{definicion}
 
-Luego de esa retransmisión, se pasa a \textbf{Fast Recovery}.
+Luego de esa retransmisión, se pasa a \textbf{Fast Recovery} reduciendo \texttt{cwnd = ssthresh = cwnd\_anterior / 2}. Si hay un \textbf{timeout}, la \texttt{cwnd} se reinicia a 1.
